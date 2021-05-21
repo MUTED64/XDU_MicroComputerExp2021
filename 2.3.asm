@@ -1,0 +1,141 @@
+DATA SEGMENT
+STRI1 DB 5 dup(0)  
+STRI2 DB 5 dup(0) 
+addc  DB '+'
+equal DB '='
+DATA ENDS
+
+CODE SEGMENT
+    ASSUME CS:CODE,SS:STACK,DS:DATA,ES:DATA
+    START PROC FAR
+
+PUSH DS
+MOV AX,0
+PUSH AX
+MOV AX,DATA
+MOV DS,AX 
+MOV ES,AX 
+
+MOV AH,1H       
+INT 21H
+SUB AL,30H      
+mov STRI1+3,al
+MOV AH,1H
+INT 21H
+SUB AL,30H 
+mov STRI1+2,al
+MOV AH,1H
+INT 21H
+SUB AL,30H 
+mov STRI1+1,al
+MOV AH,1H
+INT 21H
+SUB AL,30H 
+mov STRI1,al
+
+MOV DL,0AH     
+MOV AH,2H
+INT 21H
+MOV DL,0DH  
+MOV AH,2H
+INT 21H 
+
+MOV AH,1H      
+INT 21H
+SUB AL,30H    
+mov STRI2+3,al
+MOV AH,1H
+INT 21H
+SUB AL,30H 
+mov STRI2+2,al
+MOV AH,1H
+INT 21H
+SUB AL,30H 
+mov STRI2+1,al
+MOV AH,1H
+INT 21H
+SUB AL,30H 
+mov STRI2,al
+
+MOV DL,0AH      
+MOV AH,2H
+INT 21H
+MOV DL,0DH
+MOV AH,2H
+INT 21H
+
+MOV SI,OFFSET STRI1 
+push [si]
+push [si+1]
+push [si+2]
+push [si+3]
+
+MOV DI,OFFSET STRI2 
+push [di]
+push [di+1]
+push [di+2]
+push [di+3]
+
+MOV CX,5 
+CLC 
+
+CYCLE: 
+    MOV AL,[SI]
+    ADC AL,[DI] 
+    AAA        
+    MOV [DI],AL 
+    INC SI
+    INC DI
+LOOP CYCLE
+
+
+mov cx,4
+S:
+    pop dx
+    add dl,30h
+    MOV AH,2
+    INT 21H  
+loop S
+
+mov dl,addc
+MOV AH,2
+INT 21H 
+
+mov cx,4
+S2:
+    pop dx
+    add dl,30h
+    MOV AH,2
+    INT 21H  
+loop S2
+
+mov dl,equal
+MOV AH,2
+INT 21H
+
+MOV SI,OFFSET STRI2 
+MOV DL,[SI+4] 
+ADD DL,30H
+MOV AH,2
+INT 21H
+MOV DL,[SI+3] 
+ADD DL,30H
+MOV AH,2
+INT 21H
+MOV DL,[SI+2]
+ADD DL,30H
+MOV AH,2
+INT 21H
+MOV DL,[SI+1] 
+ADD DL,30H
+MOV AH,2
+INT 21H 
+MOV DL,[SI+0] 
+ADD DL,30H
+MOV AH,2
+INT 21H
+RET
+START ENDP
+CODE ENDS
+
+END START

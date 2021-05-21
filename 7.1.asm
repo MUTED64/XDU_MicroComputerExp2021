@@ -1,0 +1,16 @@
+CODE SEGMENT
+   ASSUME CS:CODE
+START:        
+   MOV AL,90H ;控制A输入C输出
+   MOV DX,206H
+   OUT DX,AL   
+RUN:   
+   MOV AL, 0H
+   MOV DX, 200H
+   IN AL, DX ;端口A读入
+   NOT AL   
+   MOV DX, 204H
+   OUT DX, AL ;端口C输出
+   JMP RUN
+CODE ENDS
+END START

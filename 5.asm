@@ -1,0 +1,41 @@
+CODE SEGMENT
+    ASSUME CS:CODE
+START:
+    MOV AX,1000H
+    MOV DS,AX ;设置数据段地址
+    MOV AL,1
+    MOV BX,0000H
+    MOV CX,1000H ;循环次数
+    MOV [BX],AL
+    JMP M1 
+    ;1～8循环写入10000H-10FFFH
+ZERO:
+    MOV AL,1	
+M1:
+	MOV [BX],AL  
+	INC BX
+    INC AL
+    CMP AL,8
+    JA ZERO
+    LOOP M1   ;循环次数CX的值
+    ;将9写入11000H-12FFFH
+    MOV AL,09H
+    MOV CX,2000H   
+    MOV BX,1000H ;偏移地址1000H
+M2: 
+    MOV [BX],AL
+    INC BX
+    LOOP M2    
+    ;将11000H-12FFFH内容移到14000H-15FFFH
+    MOV BX,1000H
+    MOV CX,2000H
+TRANS:
+    MOV AL,[BX] ;读入
+    ADD BX,3000H
+    MOV [BX],AL
+    SUB BX,3000H   
+    INC BX
+    LOOP TRANS 
+    HLT
+CODE ENDS
+    END START
